@@ -19,10 +19,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/", () =>
+app.MapGet("/DatosDeVuelo", (int flight_no) =>
 {
 
-    return PlaneData.vuelos();
+    return PlaneData.vuelos(flight_no);
 
 });
 
