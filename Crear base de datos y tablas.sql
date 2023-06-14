@@ -43,9 +43,8 @@ airport_name NVARCHAR(60) NOT NULL,
 max_planes INT NOT NULL DEFAULT 50,
 planes_quantity INT NOT NULL,
 max_planes_departuring INT,
-planes_departuring INT NOT NULL,
+
 max_planes_arriving INT,
-planes_arriving INT NOT NULL
 );
 
 DROP TABLE airport
@@ -55,9 +54,12 @@ SELECT * FROM passenger
 SELECT * FROM airport
 
 Delete from plane
-where id_plane > 5
 
-DBCC CHECKIDENT(plane, reseed, 5)
+DBCC CHECKIDENT(plane, reseed, 0)
+
+Delete from passenger
+
+DBCC CHECKIDENT(passenger, reseed, 0)
 
 --PROCEDURES
 

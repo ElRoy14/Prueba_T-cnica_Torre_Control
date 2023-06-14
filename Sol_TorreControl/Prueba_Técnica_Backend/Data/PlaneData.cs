@@ -203,24 +203,36 @@ namespace Prueba_Técnica_Backend.Data
                 SqlCommand cmd = new SqlCommand("sp_buy_flight", oConexion);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@arrived_time", oPasajero.arr_time);
+                cmd.Parameters.AddWithValue("@departure_time", oPasajero.dep_time);
                 cmd.Parameters.AddWithValue("@arrived_airport_name", oPasajero.arr_air_name);
                 cmd.Parameters.AddWithValue("@departure_airport_name", oPasajero.dep_air_name);
-                cmd.Parameters.AddWithValue("@departure_airport_name", oPasajero.f_name);
-                cmd.Parameters.AddWithValue("@departure_airport_name", oPasajero.baggage_weight);
-                cmd.Parameters.AddWithValue("@departure_airport_name", oPasajero.flight_code);
+                cmd.Parameters.AddWithValue("@full_name", oPasajero.f_name);
+                cmd.Parameters.AddWithValue("@baggage_weight", oPasajero.baggage_weight);
+                cmd.Parameters.AddWithValue("@flight_id", oPasajero.flight_code);
 
-                //try
-                //{
-                    oConexion.Open();
+                try
+                {
+                oConexion.Open();
                     cmd.ExecuteNonQuery();
                     return true;
-                //}
-                //catch (Exception ex)
-                //{
-                    //return false;
-                //}
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
             }
         }
-
+        public static bool CrearAeropuerto(Airport oAirport)
+        {
+            using (SqlConnection oConexion = new SqlConnection(Conexion.connectionPath))
+            {
+                SqlCommand cmd = new SqlCommand("sp_create_airport", oConexion);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@airport_name", oAirport.airport_name);
+                cmd.Parameters.AddWithValue("@max_planes", oAirport.airport_name);
+                cmd.Parameters.AddWithValue("@airport_name", oAirport.airport_name);
+                cmd.Parameters.AddWithValue("@airport_name", oAirport.airport_name);
+            }
+        }
     }
 }

@@ -1,20 +1,22 @@
 USE ControlTower
 
 -- Insertar registros en la tabla "airport"
-INSERT INTO airport (airport_name, planes_quantity, planes_departuring, planes_arriving)
-VALUES ('Airport A', 50, 10, 10);
+INSERT INTO airport (airport_name, planes_quantity, max_planes_departuring, max_planes_arriving)
+VALUES ('Airport A', 40, 8, 12);
 
-INSERT INTO airport (airport_name, planes_quantity, planes_departuring, planes_arriving)
-VALUES ('Airport B', 50, 5, 7);
+INSERT INTO airport (airport_name, planes_quantity, max_planes_departuring, max_planes_arriving)
+VALUES ('Airport B', 45, 10, 15);
 
-INSERT INTO airport (airport_name, planes_quantity, planes_departuring, planes_arriving)
-VALUES ('Airport C', 50, 8, 9);
+INSERT INTO airport (airport_name, planes_quantity, max_planes_departuring, max_planes_arriving)
+VALUES ('Airport C', 35, 6, 10);
 
-INSERT INTO airport (airport_name, planes_quantity, planes_departuring, planes_arriving)
-VALUES ('Airport D', 50, 15, 12);
+INSERT INTO airport (airport_name, planes_quantity, max_planes_departuring, max_planes_arriving)
+VALUES ('Airport D', 50, 12, 18);
 
-INSERT INTO airport (airport_name, planes_quantity, planes_departuring, planes_arriving)
-VALUES ('Airport E', 50, 4, 6);
+INSERT INTO airport (airport_name, planes_quantity, max_planes_departuring, max_planes_arriving)
+VALUES ('Airport E', 30, 5, 8);
+
+
 
 -- Insertar registros en la tabla "plane"
 -- Avión 1

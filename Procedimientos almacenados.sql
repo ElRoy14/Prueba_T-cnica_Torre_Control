@@ -2,7 +2,8 @@ USE ControlTower
 
 DROP PROCEDURE sp_show_flight
 
---Obtener todos los datos del vuelo
+--------------------------------------------------------------------------Crera procedure para obtener todos los datos del vuelo---------------------------------------------
+
 CREATE PROCEDURE sp_show_flight(
 @id INT)
 AS
@@ -42,21 +43,7 @@ exec sp_show_flight 1;
 
 EXEC sp_show_flight 2;
 
---Crear procedimiento para obtener solo los nombres de los aeropuertos
-DROP PROCEDURE sp_show_air_name
-
-CREATE PROCEDURE sp_show_air_name(
-@id INT)
-AS
-BEGIN
-	SELECT arrived_airport_name
-	FROM plane
-	WHERE id_plane = @id;
-END;
-
-EXEC sp_show_air_name 4
-
---Crear procedure para registrar un vuelo nuevo
+--------------------------------------------------------Crear procedure para registrar un vuelo nuevo--------------------------------------------------------------------------
 
 DROP PROCEDURE sp_register
 
@@ -74,7 +61,10 @@ BEGIN
 	DECLARE @a_airport_id INT,
 			@d_airport_id INT,
 			@pln_weight DECIMAL,
-			@q_pass INT;
+			@q_pass INT,
+			@planes_q INT,
+			@planes_dep INT,
+			@planes_arr INT;
 
 	SET @a_airport_id = (SELECT id_airport 
 						FROM airport
@@ -84,25 +74,38 @@ BEGIN
 						FROM airport
 						WHERE airport_name = @dep_air_name);
 
+--------------------------recolectando cantidad de aviones en un aeropuerto para ver si esta lleno o no----------------------------------------
+
+	SET @planes_arr = (SELECT COUNT(*) 
+						FROM plane 
+						WHERE arrived_airport_name = @arr_air_name);
+
+	SET @planes_dep = (SELECT COUNT(*) 
+						FROM plane
+						WHERE departure_airport_name = @dep_air_name);
+
+	SET @planes_q = (@planes_arr + @planes_dep);
+
+---------------------------Condicionales por si los aeropuertos estan llenos----------------------------------------------------------
+
+	IF (@planes_q >= (SELECT max_planes FROM airport WHERE airport_name = @arr_air_name))
+	BEGIN
+		RAISERROR('Aeropuerto lleno', 16, 1);
+		RETURN;
+	END;
+	IF (@planes_q >= (SELECT max_planes FROM airport WHERE airport_name = @dep_air_name))
+	BEGIN
+		RAISERROR('Aeropuerto lleno', 16, 1);
+		RETURN;
+	END;
+
 
 	INSERT INTO plane (arrived_time, departure_time, arrived_airport_name, arrived_airport_id, departure_airport_name, departure_airport_id, flight_status, max_weight, max_passengers)
 						VALUES (@arr_time, @dep_time, @arr_air_name, @d_airport_id, @dep_air_name, @d_airport_id, @fly_sts, @max_weight, @max_pass);
 
-	/*SET @lst_row = (SELECT TOP(1) SCOPE_IDENTITY()
-					FROM plane);
-
-	SET @pln_weight = (SELECT SUM(baggage_weight) AS tt_bg_weight
-						FROM passenger
-						WHERE flight_id = @lst_row);
-
-	SET @q_pass = (SELECT  COUNT(*) AS tt_q_pass
-					FROM passenger
-					WHERE flight_id = @lst_row);
-
-	UPDATE plane
-	SET plane_weight = 42.60, quantity_passengers = @q_pass
-	WHERE id_plane = @lst_row;*/
 END;
+
+drop procedure sp_register
 
 CREATE PROCEDURE sp_cancel(
 @id INT)
@@ -121,7 +124,7 @@ EXEC sp_cancel 6
 
 EXEC sp_register '2023-06-12 12:00:00', '2023-06-12 12:30:00', 'Airport A', 'Airport B', 'Flying', 20.00, 200
 
---Crear procedure para buscar los vuelos disponibles en base a la fecha deseada
+-----------------------------------------Crear procedure para buscar los vuelos disponibles en base a la fecha deseada---------------------------------------------------------------------
 
 CREATE PROCEDURE sp_search_flight(
 @arrived_time DATETIME,
@@ -142,7 +145,7 @@ EXEC sp_search_flight '2023-12-06T09:00:00.000Z', 'Airport A', 'Airport B'
 
 DROP procedure sp_search_flight
 
---Crear procedure para comprar un vuelo especifico
+------------------------------------------------------------------------Crear procedure para comprar un vuelo especifico-------------------------------------------------------------------
 
 CREATE PROCEDURE sp_buy_flight(
 @arrived_time DATETIME,
@@ -180,14 +183,14 @@ BEGIN
 	IF ((SELECT plane_weight FROM plane WHERE id_plane = @flight_id) IS NULL)
 	BEGIN
 		UPDATE plane
-		SET plane_weight = ISNULL(plane_weight, @bag_weight), quantity_passengers = ISNULL(quantity_passengers, 1)
+		SET plane_weight = ISNULL(plane_weight, @baggage_weight), quantity_passengers = ISNULL(quantity_passengers, 1)
 		WHERE id_plane = @flight_id;
 		print('null');
 	END
 	ELSE
 	BEGIN 
 		UPDATE plane
-		SET plane_weight += @bag_weight, quantity_passengers += 1
+		SET plane_weight += @baggage_weight, quantity_passengers += 1
 		WHERE id_plane = @flight_id;
 		print('No null');
 	END;
@@ -196,17 +199,44 @@ END;
 
 SELECT * FROM plane
 
-/*IF ((SELECT plane_weight FROM plane WHERE id_plane = 6) IS NULL)
-	BEGIN
-		UPDATE plane
-		SET plane_weight = ISNULL(plane_weight, 11.00), quantity_passengers = ISNULL(quantity_passengers, 1)
-		WHERE id_plane = 6;
-	END
-	ELSE
-	BEGIN 
-		PRINT('NO NULL');
-	END;*/
-
 DROP PROCEDURE sp_buy_flight
 
-EXEC sp_buy_flight '2023-12-06 12:00:00.000', '2023-12-06 12:30:00.000', 'Airport D', 'Airport C', 'Peter Languila', 22.60, 6
+EXEC sp_buy_flight '2023-12-06 10:30:00.000', '2023-12-06 12:15:00.000', 'Airport D', 'Airport C', 'James Languela', 06.30, 4
+
+-----------------------------------------------------------Crear Procedure para crear Aeropuertos-------------------------------------------------------------
+
+drop procedure sp_create_airport;
+
+CREATE PROCEDURE sp_create_airport(
+@airport_name VARCHAR(40),
+@max_planes INT,
+@max_planes_dep INT,
+@max_planes_arr INT)
+AS
+BEGIN
+	DECLARE @planes_q INT,
+			@planes_dep INT,
+			@planes_arr INT;
+
+	IF EXISTS (SELECT airport_name FROM airport WHERE airport_name = @airport_name)
+	BEGIN
+		RAISERROR('El nombre de aeropuerto ya existe', 16, 1);
+		RETURN;
+	END;
+
+	SET @planes_arr = (SELECT COUNT(*) 
+					FROM plane 
+					WHERE arrived_airport_name = @airport_name);
+
+	SET @planes_dep = (SELECT COUNT(*) 
+					FROM plane
+					WHERE departure_airport_name = @airport_name);
+
+	SET @planes_q = (@planes_arr + @planes_dep);
+
+
+	INSERT INTO airport (airport_name, max_planes, planes_quantity, max_planes_departuring, max_planes_arriving)
+					VALUES (@airport_name, @max_planes, @planes_q, @max_planes_dep, @max_planes_arr);
+END;
+
+EXEC sp_create_airport 'Airport B', 200, 1, 1

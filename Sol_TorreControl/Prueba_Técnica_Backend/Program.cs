@@ -40,7 +40,7 @@ app.MapDelete("/CancelarVuelo/{id}", (int id) =>
     return PlaneData.Cancelar(id);
 });
 
-app.MapPut("/Comprar boleto", (Pasajero oPasajero) =>
+app.MapPut("/BuscarVuelo", (Pasajero oPasajero) =>
 {
     return PlaneData.BuscarVuelos(oPasajero);
 });
