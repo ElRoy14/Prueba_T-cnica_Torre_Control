@@ -8,19 +8,19 @@ Drop database ControlTower
 
 --Se crea la tabla "planes"
 
-
-
 CREATE TABLE plane(
 id_plane INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
 arrived_time DATETIME,
 departure_time DATETIME,
+arrived_airport_name VARCHAR(40),
 arrived_airport_id INT NOT NULL,
+departure_airport_name VARCHAR(40),
 departure_airport_id INT NOT NULL, 
 flight_status VARCHAR(20) NOT NULL,
 max_weight DECIMAL(4,2) NOT NULL DEFAULT 150,
 plane_weight DECIMAL(4,2), 
 max_passengers INT NOT NULL DEFAULT 100,
-quantity_passengers INT DEFAULT 100,
+quantity_passengers INT,
 CONSTRAINT arrived_airport_FK FOREIGN KEY (arrived_airport_id) REFERENCES airport(id_airport),                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 CONSTRAINT departure_airport_FK FOREIGN KEY (departure_airport_id) REFERENCES airport(id_airport)
 );
@@ -52,6 +52,7 @@ DROP TABLE airport
 
 SELECT * FROM plane
 SELECT * FROM passenger
+SELECT * FROM airport
 
 Delete from plane
 where id_plane > 5
@@ -60,58 +61,4 @@ DBCC CHECKIDENT(plane, reseed, 5)
 
 --PROCEDURES
 
-DROP PROCEDURE sp_register
-
-CREATE PROCEDURE sp_register(
-@arr_time DATETIME,
-@dep_time DATETIME,
-@arr_air_name VARCHAR(20),
-@dep_air_name VARCHAR(20),
-@fly_sts VARCHAR(20),
-@max_weight DECIMAL(4,2),
-@max_pass INT
-)
-AS
-BEGIN 
-	DECLARE @a_airport_id INT,
-			@d_airport_id INT,
-			@pln_weight DECIMAL,
-			@q_pass INT,
-			@lst_row INT;
-
-	SET @a_airport_id = (SELECT id_airport 
-						FROM airport
-						WHERE airport_name = @arr_air_name);
-
-	SET @d_airport_id = (SELECT id_airport 
-						FROM airport
-						WHERE airport_name = @dep_air_name);
-
-
-	INSERT INTO plane (arrived_time, departure_time, arrived_airport_id, departure_airport_id, flight_status, max_weight, max_passengers)
-						VALUES (@arr_time, @dep_time, @d_airport_id, @d_airport_id, @fly_sts, @max_weight, @max_pass);
-
-	/*SET @lst_row = (SELECT TOP(1) SCOPE_IDENTITY()
-					FROM plane);
-
-	SET @pln_weight = (SELECT SUM(baggage_weight) AS tt_bg_weight
-						FROM passenger
-						WHERE flight_id = 3);
-
-	SET @q_pass = (SELECT  COUNT(*) AS tt_q_pass
-					FROM passenger
-					WHERE flight_id = 3);
-
-	UPDATE plane
-	SET plane_weight = @pln_weight, quantity_passengers = @q_pass
-	WHERE id_plane = @lst_row;*/
-END;
-
-SELECT  COUNT(*) AS tt_q_pass
-					FROM passenger
-					WHERE flight_id = 3;
-
-EXEC sp_register '2023-06-12 10:30:00', '2023-06-12 10:30:00', 'Airport A', 'Airport B', 'Flying', 20.00, 200
-
-SELECT * FROM plane
 

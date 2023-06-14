@@ -58,3 +58,40 @@ VALUES ('Emily Wilson', 23.9, 2);
 INSERT INTO passenger (passenger_full_name, baggage_weight, flight_id)
 VALUES ('Sarah Thompson', 19.8, 3);
 
+-- Inserción 6
+INSERT INTO passenger (passenger_full_name, baggage_weight, flight_id)
+VALUES ('John Smith', 20.5, 1);
+
+-- Inserción 7
+INSERT INTO passenger (passenger_full_name, baggage_weight, flight_id)
+VALUES ('Emily Johnson', 15.2, 1);
+
+-- Inserción 8
+INSERT INTO passenger (passenger_full_name, baggage_weight, flight_id)
+VALUES ('David Williams', 18.7, 2);
+
+-- Inserción 9
+INSERT INTO passenger (passenger_full_name, baggage_weight, flight_id)
+VALUES ('Sophia Davis', 12.3, 2);
+
+-- Inserción 10
+INSERT INTO passenger (passenger_full_name, baggage_weight, flight_id)
+VALUES ('James Anderson', 22.1, 3);
+
+-- Inserción 11
+INSERT INTO passenger (passenger_full_name, baggage_weight, flight_id)
+VALUES ('Olivia Thompson', 19.8, 3);
+
+-- Inserción 12
+INSERT INTO passenger (passenger_full_name, baggage_weight, flight_id)
+VALUES ('Benjamin Wilson', 16.5, 3);
+
+
+DELETE FROM plane
+DBCC CHECKIDENT(plane, RESEED, 0)
+
+DELETE FROM passenger
+DBCC CHECKIDENT(plane, RESEED, 0)
+
+DELETE FROM airport
+DBCC CHECKIDENT(plane, RESEED, 0)

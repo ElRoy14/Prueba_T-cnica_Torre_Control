@@ -3,9 +3,11 @@
     public class Plane
     {
         public int id_plane { get; set; }
-        public DateTime arrived_time { get; set; }
-        public DateTime departure_time { get; set; }
+        public DateTime? arrived_time { get; set; }
+        public DateTime? departure_time { get; set; }
         public int arrived_aiport_id { get; set; }
+        public string? arrived_airport_name { get; set; }
+        public string? departure_airport_name { get; set; }
         public int departure_airport_id { get; set; }
         public string? flight_status { get; set; }
         public decimal max_weight { get; set; }
@@ -39,6 +41,12 @@
             }
             return pasajeros;
         }
+
+        public static string getAirportName(int âirport_id)
+        {
+            return "";
+        }
+
 
     }
 }
