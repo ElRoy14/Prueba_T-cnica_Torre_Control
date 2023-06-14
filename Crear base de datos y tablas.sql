@@ -4,8 +4,6 @@ CREATE DATABASE ControlTower
 
 USE ControlTower
 
-Drop database ControlTower
-
 --Se crea la tabla "planes"
 
 CREATE TABLE plane(
@@ -43,24 +41,6 @@ airport_name NVARCHAR(60) NOT NULL,
 max_planes INT NOT NULL DEFAULT 50,
 planes_quantity INT NOT NULL,
 max_planes_departuring INT,
-
 max_planes_arriving INT,
 );
-
-DROP TABLE airport
-
-SELECT * FROM plane
-SELECT * FROM passenger
-SELECT * FROM airport
-
-Delete from plane
-
-DBCC CHECKIDENT(plane, reseed, 0)
-
-Delete from passenger
-
-DBCC CHECKIDENT(passenger, reseed, 0)
-
---PROCEDURES
-
 

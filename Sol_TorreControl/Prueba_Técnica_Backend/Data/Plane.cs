@@ -42,11 +42,5 @@
             return pasajeros;
         }
 
-        public static string getAirportName(int âirport_id)
-        {
-            return "";
-        }
-
-
     }
 }

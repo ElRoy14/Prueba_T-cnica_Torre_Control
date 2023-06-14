@@ -161,7 +161,7 @@ namespace Prueba_Técnica_Backend.Data
                     {
                         while (dtr.Read())
                         {
-                            if (!dtr.IsDBNull(3)) // Aquí, 0 representa el índice de la columna que deseas leer
+                            if (!dtr.IsDBNull(3)) // Aquí, 3 representa el índice de la columna que deseas leer
                             {
                             if (departure_time == Convert.ToDateTime(dtr["arrived_time"]) 
                                     && arr_airport_name == dtr["arrived_airport_name"].ToString() 
@@ -222,16 +222,28 @@ namespace Prueba_Técnica_Backend.Data
                 }
             }
         }
-        public static bool CrearAeropuerto(Airport oAirport)
+        public static string CrearAeropuerto(Airport oAirport)
         {
             using (SqlConnection oConexion = new SqlConnection(Conexion.connectionPath))
             {
                 SqlCommand cmd = new SqlCommand("sp_create_airport", oConexion);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@airport_name", oAirport.airport_name);
-                cmd.Parameters.AddWithValue("@max_planes", oAirport.airport_name);
-                cmd.Parameters.AddWithValue("@airport_name", oAirport.airport_name);
-                cmd.Parameters.AddWithValue("@airport_name", oAirport.airport_name);
+                cmd.Parameters.AddWithValue("@max_planes", oAirport.max_planes);
+                cmd.Parameters.AddWithValue("@max_planes_dep", oAirport.max_planes_departuring);
+                cmd.Parameters.AddWithValue("@max_planes_arr", oAirport.max_planes_arriving);
+
+                try
+                {
+                    oConexion.Open();
+                    cmd.ExecuteNonQuery();
+                    return "¡Aeropuerto Creado Exitosamente!";
+                }
+                catch (Exception ex)
+                {
+                    return ex.ToString();
+                }
+
             }
         }
     }

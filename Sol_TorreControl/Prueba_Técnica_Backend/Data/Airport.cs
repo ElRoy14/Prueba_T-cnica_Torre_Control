@@ -2,7 +2,6 @@
 {
     public class Airport
     {
-        public int id_airport { get; set; } 
         public string? airport_name { get; set; }
         public int max_planes { get; set; } 
         public int max_planes_departuring { get; set; }

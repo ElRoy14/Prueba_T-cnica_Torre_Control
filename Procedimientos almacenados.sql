@@ -1,7 +1,5 @@
 USE ControlTower
 
-DROP PROCEDURE sp_show_flight
-
 --------------------------------------------------------------------------Crera procedure para obtener todos los datos del vuelo---------------------------------------------
 
 CREATE PROCEDURE sp_show_flight(
@@ -37,15 +35,7 @@ BEGIN
 
 END;
 
-SELECT * FROM airport
-
-exec sp_show_flight 1;
-
-EXEC sp_show_flight 2;
-
 --------------------------------------------------------Crear procedure para registrar un vuelo nuevo--------------------------------------------------------------------------
-
-DROP PROCEDURE sp_register
 
 CREATE PROCEDURE sp_register(
 @arr_time DATETIME,
@@ -99,13 +89,14 @@ BEGIN
 		RETURN;
 	END;
 
+	UPDATE airport
+	SET planes_quantity += 1
+	WHERE airport_name = @arr_air_name;
 
 	INSERT INTO plane (arrived_time, departure_time, arrived_airport_name, arrived_airport_id, departure_airport_name, departure_airport_id, flight_status, max_weight, max_passengers)
 						VALUES (@arr_time, @dep_time, @arr_air_name, @d_airport_id, @dep_air_name, @d_airport_id, @fly_sts, @max_weight, @max_pass);
 
 END;
-
-drop procedure sp_register
 
 CREATE PROCEDURE sp_cancel(
 @id INT)
@@ -118,11 +109,6 @@ BEGIN
 	DELETE FROM plane
 	WHERE id_plane = @id;
 END;
-drop procedure sp_cancel
-
-EXEC sp_cancel 6
-
-EXEC sp_register '2023-06-12 12:00:00', '2023-06-12 12:30:00', 'Airport A', 'Airport B', 'Flying', 20.00, 200
 
 -----------------------------------------Crear procedure para buscar los vuelos disponibles en base a la fecha deseada---------------------------------------------------------------------
 
@@ -140,10 +126,6 @@ BEGIN
 	SELECT arrived_time, id_plane, arrived_airport_name, departure_airport_name FROM plane
 	Where arrived_time = @arrived_time;
 END;
-
-EXEC sp_search_flight '2023-12-06T09:00:00.000Z', 'Airport A', 'Airport B'
-
-DROP procedure sp_search_flight
 
 ------------------------------------------------------------------------Crear procedure para comprar un vuelo especifico-------------------------------------------------------------------
 
@@ -197,15 +179,7 @@ BEGIN
 
 END;
 
-SELECT * FROM plane
-
-DROP PROCEDURE sp_buy_flight
-
-EXEC sp_buy_flight '2023-12-06 10:30:00.000', '2023-12-06 12:15:00.000', 'Airport D', 'Airport C', 'James Languela', 06.30, 4
-
 -----------------------------------------------------------Crear Procedure para crear Aeropuertos-------------------------------------------------------------
-
-drop procedure sp_create_airport;
 
 CREATE PROCEDURE sp_create_airport(
 @airport_name VARCHAR(40),
@@ -238,5 +212,3 @@ BEGIN
 	INSERT INTO airport (airport_name, max_planes, planes_quantity, max_planes_departuring, max_planes_arriving)
 					VALUES (@airport_name, @max_planes, @planes_q, @max_planes_dep, @max_planes_arr);
 END;
-
-EXEC sp_create_airport 'Airport B', 200, 1, 1

@@ -16,8 +16,6 @@ VALUES ('Airport D', 50, 12, 18);
 INSERT INTO airport (airport_name, planes_quantity, max_planes_departuring, max_planes_arriving)
 VALUES ('Airport E', 30, 5, 8);
 
-
-
 -- Insertar registros en la tabla "plane"
 -- Avión 1
 INSERT INTO plane (arrived_time, departure_time, arrived_airport_id, departure_airport_id, flight_status, max_weight, plane_weight, max_passengers, quantity_passengers)
@@ -88,12 +86,3 @@ VALUES ('Olivia Thompson', 19.8, 3);
 INSERT INTO passenger (passenger_full_name, baggage_weight, flight_id)
 VALUES ('Benjamin Wilson', 16.5, 3);
 
-
-DELETE FROM plane
-DBCC CHECKIDENT(plane, RESEED, 0)
-
-DELETE FROM passenger
-DBCC CHECKIDENT(plane, RESEED, 0)
-
-DELETE FROM airport
-DBCC CHECKIDENT(plane, RESEED, 0)
